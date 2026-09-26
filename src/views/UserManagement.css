@@ -1,0 +1,155 @@
+.user-management-page { min-height: 100vh; background: #f4f7f9; }
+.user-page-header { display: flex; min-height: 51px; align-items: center; justify-content: space-between; gap: 18px; padding: 6px 24px; border-bottom: 1px solid #e1e7eb; background: #fff; }
+.user-page-title { min-width: 0; }
+.user-breadcrumb { display: flex; align-items: center; gap: 6px; color: #8a979b; font-size: 8px; }
+.user-breadcrumb b { color: #b1bbbf; font-size: 12px; font-weight: 400; }
+.user-breadcrumb strong { color: #d87817; font-weight: 600; }
+.user-page-title h1 { margin: 2px 0 0; color: #263943; font-size: 16px; font-weight: 700; line-height: 1.2; }
+.user-header-actions { display: flex; align-items: center; gap: 10px; }
+.user-search-field { width: 174px; }
+.user-search-field .MuiOutlinedInput-root { height: 28px; border-radius: 6px; background: #f5f7f9; font-size: 9px; }
+.user-search-field .MuiOutlinedInput-notchedOutline { border-color: transparent; }
+.user-search-field .MuiInputAdornment-root { color: #8b9ba0; }
+.user-search-field .MuiInputAdornment-root svg { font-size: 14px; }
+.user-search-field input { padding: 5px 0; }
+.add-user-button.MuiButton-root { min-height: 28px; border-radius: 6px; padding: 0 12px; background: #eb7d17; box-shadow: none; font-size: 9px; font-weight: 600; text-transform: none; white-space: nowrap; }
+.add-user-button.MuiButton-root:hover { background: #d97010; box-shadow: none; }
+.add-user-button .MuiButton-startIcon { margin-right: 5px; }
+.add-user-button .MuiButton-startIcon svg { font-size: 14px; }
+
+.user-management-content { display: flex; flex-direction: column; gap: 15px; padding: 0 23px 22px; }
+.settings-tabs { display: flex; min-height: 45px; align-items: stretch; gap: 17px; border-bottom: 1px solid #dce3e7; overflow-x: auto; }
+.settings-tab { position: relative; flex: 0 0 auto; padding: 0 1px; border: 0; color: #89969a; background: transparent; font: inherit; font-size: 10px; cursor: pointer; }
+.settings-tab:hover { color: #31464e; }
+.settings-tab.is-selected { color: #2b3f48; font-weight: 700; }
+.settings-tab.is-selected::after { position: absolute; right: 0; bottom: -1px; left: 0; height: 2px; background: #e9851c; content: ''; }
+
+.user-metrics-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 11px; }
+.user-metric-card { position: relative; display: flex; min-width: 0; min-height: 75px; flex-direction: column; justify-content: space-between; padding: 11px 12px 9px; border: 1px solid #e3e9ec; border-radius: 8px; background: #fff; }
+.user-metric-label { color: #879499; font-size: 8px; font-weight: 600; }
+.user-metric-card > strong { color: #293a43; font-size: 18px; line-height: 1.1; }
+.user-metric-card > div { display: flex; align-items: center; gap: 5px; overflow: hidden; white-space: nowrap; }
+.user-metric-card small { overflow: hidden; color: #98a4a8; font-size: 8px; text-overflow: ellipsis; }
+.metric-status-dot { position: absolute; top: 12px; right: 11px; width: 6px; height: 6px; border-radius: 50%; }
+.dot-teal { background: #075449; }
+.dot-green { background: #20bd72; }
+.dot-red { background: #e84d44; }
+.dot-orange { background: #f08a1f; }
+.metric-change { padding: 2px 4px; border-radius: 3px; font-size: 7px; font-weight: 700; }
+.change-teal { color: #078b61; background: #e3f7ef; }
+.change-green { color: #0c9d59; background: #e3f7ed; }
+.change-red { color: #d9473e; background: #fff0ee; }
+.change-orange { color: #df7518; background: #fff3e8; }
+
+.user-directory-panel { width: 100%; min-width: 0; padding: 13px 13px 10px; border: 1px solid #e3e9ec; border-radius: 9px; background: #fff; }
+.directory-toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.directory-toolbar h2 { flex: 0 0 auto; margin: 0 3px 0 0; color: #2b3d47; font-size: 10px; font-weight: 700; }
+.directory-toolbar .MuiFormControl-root { min-width: 104px; }
+.directory-toolbar .sort-select { min-width: 112px; margin-left: auto; }
+.directory-toolbar .MuiInputBase-root { height: 25px; border-radius: 5px; font-size: 8px; }
+.directory-toolbar .MuiInputLabel-root { font-size: 9px; }
+.directory-toolbar .MuiSelect-select { padding: 4px 26px 4px 8px; }
+.directory-toolbar .MuiOutlinedInput-notchedOutline { border-color: #dfe7ea; }
+
+.user-table-wrap { width: 100%; overflow-x: auto; }
+.user-directory-table { width: 100%; min-width: 740px; table-layout: fixed; border-collapse: collapse; color: #344650; font-size: 8px; text-align: left; white-space: nowrap; }
+.user-directory-table th:nth-child(1) { width: 12%; }
+.user-directory-table th:nth-child(2) { width: 17%; }
+.user-directory-table th:nth-child(3) { width: 27%; }
+.user-directory-table th:nth-child(4) { width: 11%; }
+.user-directory-table th:nth-child(5) { width: 12%; }
+.user-directory-table th:nth-child(6) { width: 15%; }
+.user-directory-table th:nth-child(7) { width: 6%; }
+.user-directory-table thead { background: #f5f7f9; color: #859398; font-size: 7px; text-transform: uppercase; }
+.user-directory-table th { font-weight: 600; }
+.user-directory-table th,
+.user-directory-table td { height: 34px; padding: 5px 7px; border-bottom: 1px solid #e8edef; }
+.user-directory-table thead th { height: 34px; }
+.user-directory-table tbody th { color: #334650; }
+.user-directory-table tbody td { color: #89969a; }
+.user-directory-table th:first-child,
+.user-directory-table td:first-child { padding-left: 8px; }
+.user-directory-table .user-email { overflow: hidden; text-overflow: ellipsis; }
+.role-badge,
+.status-badge { display: inline-block; min-width: 42px; padding: 3px 6px; border-radius: 4px; font-size: 7px; font-weight: 700; text-align: center; }
+.role-passenger { color: #0b9f85; background: #e1f7f2; }
+.role-inspector { color: #2280be; background: #e6f3fc; }
+.role-manager { color: #9557b9; background: #f2eafa; }
+.role-admin { color: #d76e16; background: #fff0e4; }
+.status-active { color: #0c9c5b; background: #e2f7ed; }
+.status-suspended { color: #d9473e; background: #fff0ee; }
+.status-inactive { color: #7e8c91; background: #edf1f3; }
+.user-row-actions { min-width: 77px; }
+.user-row-actions .MuiIconButton-root { width: 22px; height: 22px; margin-right: 2px; color: #829095; }
+.user-row-actions .MuiIconButton-root:hover { color: #075449; background: #eaf4f0; }
+.user-row-actions svg { font-size: 12px; }
+.user-empty-state { height: 100px !important; color: #89969a !important; text-align: center; }
+.user-pagination { display: flex; min-height: 36px; align-items: center; justify-content: space-between; gap: 12px; padding-top: 7px; color: #929fa3; font-size: 8px; }
+.user-pagination > div { display: flex; align-items: center; gap: 3px; }
+.user-pagination .MuiButton-root { min-width: 26px; min-height: 22px; padding: 0 5px; border: 1px solid #e3e9ec; border-radius: 4px; color: #40525a; font-size: 8px; text-transform: none; }
+.user-pagination .MuiButton-root.Mui-disabled { color: #aeb8bb; }
+.user-pagination .MuiButton-root svg { font-size: 12px; }
+.page-index { display: grid; min-width: 23px; height: 22px; place-items: center; border-radius: 4px; color: #fff; background: #075449; font-size: 8px; }
+
+.delete-dialog-title.MuiDialogTitle-root { display: flex; align-items: center; gap: 11px; padding: 22px 24px 8px; color: #293d45; font-size: 17px; font-weight: 700; }
+.delete-dialog-icon { display: grid; width: 35px; height: 35px; flex: 0 0 35px; place-items: center; border-radius: 8px; color: #c34c40; background: #fff0ed; }
+.delete-dialog-icon svg { font-size: 19px; }
+.delete-dialog-content.MuiDialogContent-root { padding: 5px 24px 16px; }
+.delete-dialog-content > p { margin: 0 0 13px; color: #718188; font-size: 12px; line-height: 1.5; }
+.delete-user-summary { display: flex; flex-direction: column; gap: 3px; padding: 11px 12px; border: 1px solid #e2ebe7; border-radius: 7px; background: #f5f9f7; }
+.delete-user-summary strong { color: #30454d; font-size: 12px; }
+.delete-user-summary span { color: #6d8086; font-size: 11px; }
+.delete-user-summary small { color: #93a0a3; font-size: 9px; }
+.delete-dialog-error { margin-top: 12px; font-size: 11px; }
+.delete-dialog-actions.MuiDialogActions-root { gap: 8px; padding: 10px 24px 20px; }
+.delete-dialog-actions .MuiButton-root { min-height: 34px; border-radius: 6px; font-size: 11px; text-transform: none; }
+.delete-dialog-actions .confirm-delete-button.MuiButton-root { background: #bf463c; box-shadow: none; }
+.delete-dialog-actions .confirm-delete-button.MuiButton-root:hover { background: #a93a32; box-shadow: none; }
+.delete-dialog-actions .confirm-delete-button svg { font-size: 15px; }
+
+.user-form-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; padding-top: 8px !important; }
+.user-form-fields .MuiInputBase-root { font-size: 13px; }
+.import-dialog-content { display: flex; flex-direction: column; gap: 14px; }
+.import-dialog-content p { margin: 0; color: #66777e; font-size: 13px; }
+.import-dialog-content input { max-width: 100%; font-size: 12px; }
+.selected-import-file { color: #0a765f; font-size: 11px; }
+.permissions-list { display: flex; flex-direction: column; gap: 1px; }
+.permissions-list span { display: flex; flex-direction: column; gap: 3px; padding: 10px 0; border-bottom: 1px solid #e8edef; }
+.permissions-list strong { color: #344650; font-size: 12px; }
+.permissions-list small { color: #839197; font-size: 11px; }
+.audit-list p { padding: 9px 0; border-bottom: 1px solid #e8edef; color: #65777e; font-size: 12px; }
+.audit-list strong { margin-right: 12px; color: #0b6c5b; }
+
+@media (max-width: 1120px) {
+  .user-management-content { padding-right: 16px; padding-left: 16px; }
+  .directory-toolbar { flex-wrap: wrap; }
+  .directory-toolbar .sort-select { margin-left: 0; }
+}
+
+@media (max-width: 850px) {
+  .user-page-header { align-items: flex-start; flex-direction: column; padding: 10px 16px; }
+  .user-header-actions { width: 100%; }
+  .user-search-field { flex: 1; }
+  .user-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .settings-tabs { gap: 15px; }
+}
+
+@media (max-width: 560px) {
+  .user-page-header { padding: 10px 12px; }
+  .user-page-title h1 { font-size: 15px; }
+  .user-header-actions { align-items: stretch; flex-direction: column; }
+  .user-search-field { width: 100%; }
+  .add-user-button.MuiButton-root { align-self: flex-start; min-height: 32px; }
+  .user-management-content { gap: 11px; padding: 0 12px 18px; }
+  .settings-tabs { min-height: 40px; gap: 16px; }
+  .settings-tab { font-size: 9px; }
+  .user-metrics-grid { gap: 8px; }
+  .user-metric-card { min-height: 74px; padding: 9px; }
+  .user-metric-card > strong { font-size: 16px; }
+  .user-directory-panel { padding: 10px; }
+  .directory-toolbar h2 { width: 100%; }
+  .directory-toolbar .MuiFormControl-root { min-width: calc(50% - 5px); flex: 1; }
+  .directory-toolbar .sort-select { margin-left: 0; }
+  .user-pagination { align-items: flex-start; flex-direction: column; }
+  .user-form-fields { grid-template-columns: 1fr; }
+}
