@@ -23,6 +23,7 @@ import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import ShowChartOutlinedIcon from '@mui/icons-material/ShowChartOutlined'
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
 import { signOut } from '../controllers/authController'
+import UserManagementView from './UserManagementView'
 import './Dashboard.css'
 
 const navigation = [
@@ -147,18 +148,6 @@ const workspaceSections = {
       ['Fare reconciliation', 'Finance', 'Oct 30', '08:15', 'Ready'],
       ['Route punctuality', 'Operations', 'Oct 29', '23:50', 'Ready'],
       ['Inspector coverage', 'Staffing', 'Oct 29', '18:10', 'Scheduled'],
-    ],
-  },
-  Settings: {
-    description: 'System preferences and manager account configuration.',
-    stats: [['NETWORK STATUS', 'Operational'], ['TIME ZONE', 'Asia/Colombo'], ['SESSION POLICY', '15 minutes']],
-    listTitle: 'System preferences',
-    columns: ['SETTING', 'CURRENT VALUE', 'DETAILS'],
-    rows: [
-      ['Service network', 'Shattle Transit', 'Primary operating network'],
-      ['Time zone', 'Asia/Colombo', 'Local service time'],
-      ['Session timeout', '15 minutes', 'Automatic session lock'],
-      ['Alert delivery', 'Enabled', 'Critical service alerts'],
     ],
   },
 }
@@ -332,36 +321,40 @@ function DashboardView() {
     <main className="dashboard-shell">
       <Sidebar active={activeNav} onSelect={setActiveNav} user={user} onSignOut={() => dispatch(signOut())} />
       <div className="dashboard-main">
-        <header className="dashboard-topbar">
-          <h1>Shattle Transport Manager - Operations Console</h1>
-          <div className="topbar-controls">
-            <TextField
-              className="dashboard-search"
-              size="small"
-              placeholder="Search routes, buses..."
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              slotProps={{
-                htmlInput: { 'aria-label': 'Search routes and buses' },
-                input: { startAdornment: <InputAdornment position="start"><SearchOutlinedIcon /></InputAdornment> },
-              }}
-            />
-            <button className="date-control" type="button"><CalendarMonthOutlinedIcon /><span>Oct 1 - Oct 30, 2026</span></button>
-            <IconButton className="notification-button" aria-label="Notifications" onClick={(event) => setNotificationAnchor(event.currentTarget)}>
-              <NotificationsNoneOutlinedIcon />
-              <i />
-            </IconButton>
-            <Menu anchorEl={notificationAnchor} open={Boolean(notificationAnchor)} onClose={() => setNotificationAnchor(null)}>
-              {alerts.slice(0, 3).map((alert) => <MenuItem key={alert.title} onClick={() => setNotificationAnchor(null)}>{alert.title}</MenuItem>)}
-            </Menu>
-          </div>
-        </header>
+        {activeNav === 'Settings' ? <UserManagementView /> : (
+          <>
+            <header className="dashboard-topbar">
+              <h1>Shattle Transport Manager - Operations Console</h1>
+              <div className="topbar-controls">
+                <TextField
+                  className="dashboard-search"
+                  size="small"
+                  placeholder="Search routes, buses..."
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  slotProps={{
+                    htmlInput: { 'aria-label': 'Search routes and buses' },
+                    input: { startAdornment: <InputAdornment position="start"><SearchOutlinedIcon /></InputAdornment> },
+                  }}
+                />
+                <button className="date-control" type="button"><CalendarMonthOutlinedIcon /><span>Oct 1 - Oct 30, 2026</span></button>
+                <IconButton className="notification-button" aria-label="Notifications" onClick={(event) => setNotificationAnchor(event.currentTarget)}>
+                  <NotificationsNoneOutlinedIcon />
+                  <i />
+                </IconButton>
+                <Menu anchorEl={notificationAnchor} open={Boolean(notificationAnchor)} onClose={() => setNotificationAnchor(null)}>
+                  {alerts.slice(0, 3).map((alert) => <MenuItem key={alert.title} onClick={() => setNotificationAnchor(null)}>{alert.title}</MenuItem>)}
+                </Menu>
+              </div>
+            </header>
 
-        <div className="dashboard-content">
-          {activeNav === 'Dashboard'
-            ? <DashboardOverview query={search} />
-            : <WorkspaceSection section={activeNav} query={search} />}
-        </div>
+            <div className="dashboard-content">
+              {activeNav === 'Dashboard'
+                ? <DashboardOverview query={search} />
+                : <WorkspaceSection section={activeNav} query={search} />}
+            </div>
+          </>
+        )}
       </div>
     </main>
   )
