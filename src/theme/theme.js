@@ -7,22 +7,22 @@ const theme = createTheme({
     palette: {
 
         primary: {
-            main: "#1976d2",
+            main: "#064b43",
         },
 
         secondary: {
-            main: "#9c27b0",
+            main: "#f4a51c",
         },
 
         background: {
-            default: "#f5f6fa",
+            default: "#edf6f1",
         },
     },
 
     typography: {
 
         fontFamily:
-            "Roboto, Arial, sans-serif",
+            '"Segoe UI", "Helvetica Neue", sans-serif',
 
         h5: {
             fontWeight: 600,
