@@ -36,6 +36,21 @@ const employeeRoles = ['Manager', 'Admin', 'Inspector']
 
 const emptyDraft = { name: '', email: '', password: '', role: 'Inspector' }
 
+function validateEmployeeDraft(draft, users, editingUser) {
+  const errors = {}
+  const name = draft.name.trim()
+  const email = draft.email.trim().toLowerCase()
+  const validRoles = editingUser?.role === 'Passenger' ? [...employeeRoles, 'Passenger'] : employeeRoles
+
+  if (name.length < 2) errors.name = 'Enter a full name with at least 2 characters.'
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = 'Enter a valid email address.'
+  else if (users.some((user) => user.id !== editingUser?.id && user.email.toLowerCase() === email)) errors.email = 'An account with this email already exists.'
+  if (!validRoles.includes(draft.role)) errors.role = 'Select a valid employee role.'
+  if (!editingUser && draft.password.length < 8) errors.password = 'Password must be at least 8 characters.'
+
+  return errors
+}
+
 function getUserStatus(user) {
   const statusValue = user.statusName ?? user.StatusName ?? user.status ?? user.Status
   if (typeof statusValue === 'number') {
@@ -68,7 +83,9 @@ function UserManagementView() {
   const [editingUser, setEditingUser] = useState(null)
   const [pendingDelete, setPendingDelete] = useState(null)
   const [draft, setDraft] = useState(emptyDraft)
+  const [showUserValidation, setShowUserValidation] = useState(false)
   const rowsPerPage = 10
+  const userValidationErrors = showUserValidation ? validateEmployeeDraft(draft, users, editingUser) : {}
 
   useEffect(() => {
     if (loadStatus === 'idle') dispatch(fetchEmployees())
@@ -99,12 +116,14 @@ function UserManagementView() {
   function openCreateDialog() {
     setEditingUser(null)
     setDraft(emptyDraft)
+    setShowUserValidation(false)
     dispatch(clearEmployeeCreateError())
     setDialog('user')
   }
 
   function openEditDialog(user) {
     setEditingUser(user)
+    setShowUserValidation(false)
     setDraft({ name: user.name, email: user.email, password: '', role: user.role, status: getUserStatus(user) })
     dispatch(clearEmployeeUpdateError())
     setDialog('user')
@@ -120,6 +139,7 @@ function UserManagementView() {
     setDialog('')
     setPendingDelete(null)
     setDraft(emptyDraft)
+    setShowUserValidation(false)
     dispatch(clearEmployeeCreateError())
     dispatch(clearEmployeeUpdateError())
     dispatch(clearEmployeeDeleteError())
@@ -127,6 +147,9 @@ function UserManagementView() {
 
   async function saveUser(event) {
     event.preventDefault()
+    setShowUserValidation(true)
+    if (Object.keys(validateEmployeeDraft(draft, users, editingUser)).length > 0) return
+
     if (editingUser) {
       const { name, email, role, status } = draft
       try {
@@ -262,16 +285,16 @@ function UserManagementView() {
       </div>
 
       <Dialog open={dialog === 'user'} onClose={closeDialog} fullWidth maxWidth="sm">
-        <form onSubmit={saveUser}>
+        <form onSubmit={saveUser} noValidate>
           <DialogTitle>{editingUser ? 'Edit user' : 'Add new user'}</DialogTitle>
           <DialogContent className="user-form-fields">
-            <TextField label="Full name" value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} required fullWidth autoFocus />
-            <TextField label="Email address" type="email" value={draft.email} onChange={(event) => setDraft({ ...draft, email: event.target.value })} required fullWidth />
-            <TextField select label="Role" value={draft.role} onChange={(event) => setDraft({ ...draft, role: event.target.value })} fullWidth>
+            <TextField label="Full name" value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} required error={Boolean(userValidationErrors.name)} helperText={userValidationErrors.name} fullWidth autoFocus />
+            <TextField label="Email address" type="email" value={draft.email} onChange={(event) => setDraft({ ...draft, email: event.target.value })} required error={Boolean(userValidationErrors.email)} helperText={userValidationErrors.email} fullWidth />
+            <TextField select label="Role" value={draft.role} onChange={(event) => setDraft({ ...draft, role: event.target.value })} required error={Boolean(userValidationErrors.role)} helperText={userValidationErrors.role} fullWidth>
               {[...employeeRoles, ...(editingUser?.role === 'Passenger' ? ['Passenger'] : [])].map((role) => <MenuItem value={role} key={role}>{role}</MenuItem>)}
             </TextField>
-            {!editingUser && <TextField label="Password" type="password" autoComplete="new-password" value={draft.password} onChange={(event) => setDraft({ ...draft, password: event.target.value })} required fullWidth />}
-            {editingUser && <TextField select label="Status" value={draft.status} onChange={(event) => setDraft({ ...draft, status: event.target.value })} fullWidth>
+            {!editingUser && <TextField label="Password" type="password" autoComplete="new-password" value={draft.password} onChange={(event) => setDraft({ ...draft, password: event.target.value })} required error={Boolean(userValidationErrors.password)} helperText={userValidationErrors.password || 'Use at least 8 characters.'} fullWidth />}
+            {editingUser && <TextField select label="Status" value={draft.status} onChange={(event) => setDraft({ ...draft, status: event.target.value })} required fullWidth>
               {['Active', 'Suspended', 'Inactive'].map((status) => <MenuItem value={status} key={status}>{status}</MenuItem>)}
             </TextField>}
             {!editingUser && createError && <Alert className="employee-create-error" severity="error">{createError}</Alert>}

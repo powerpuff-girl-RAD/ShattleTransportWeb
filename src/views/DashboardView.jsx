@@ -23,6 +23,7 @@ import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import ShowChartOutlinedIcon from '@mui/icons-material/ShowChartOutlined'
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
 import { signOut } from '../controllers/authController'
+import RoutesView from './RoutesView'
 import UserManagementView from './UserManagementView'
 import './Dashboard.css'
 
@@ -99,13 +100,6 @@ const workspaceSections = {
       ['BUS 1290', 'Route 187', '08:52 · Borella', 'Delayed'],
       ['BUS 0418', 'Route 263', '08:55 · Kotte', 'On time'],
     ],
-  },
-  Routes: {
-    description: 'Network route performance, ridership, and revenue.',
-    stats: [['ACTIVE ROUTES', '28'], ['PASSENGERS TODAY', '124,580'], ['TOP ROUTE', 'R-245']],
-    listTitle: 'Route performance',
-    columns: ['ROUTE', 'PASSENGERS', 'JOURNEYS', 'REVENUE', 'TREND'],
-    rows: routeRows.map((row) => [row.route, row.passengers, row.journeys, row.revenue, row.trend]),
   },
   'Fare Management': {
     description: 'Fare collection, ticket validation, and payment exceptions.',
@@ -321,7 +315,7 @@ function DashboardView() {
     <main className="dashboard-shell">
       <Sidebar active={activeNav} onSelect={setActiveNav} user={user} onSignOut={() => dispatch(signOut())} />
       <div className="dashboard-main">
-        {activeNav === 'Settings' ? <UserManagementView /> : (
+        {activeNav === 'Settings' ? <UserManagementView /> : activeNav === 'Routes' ? <RoutesView /> : (
           <>
             <header className="dashboard-topbar">
               <h1>Shattle Transport Manager - Operations Console</h1>
