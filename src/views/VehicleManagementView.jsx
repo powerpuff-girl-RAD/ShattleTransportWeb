@@ -23,7 +23,7 @@ import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
-import { createVehicle, fetchVehicles, updateVehicle } from "../controllers/vehicleController";
+import { createVehicle, deleteVehicle as deleteVehicleRequest, fetchVehicles, updateVehicle } from "../controllers/vehicleController";
 import "./ServiceManagement.css";
 import "./VehicleManagement.css";
 
@@ -31,6 +31,7 @@ const emptyDraft = {
   name: "",
   category: "Bus",
   id: "",
+  recordId: "",
   depot: "",
   type: "1",
   status: "Active",
@@ -46,12 +47,12 @@ const PAGE_SIZE = 7;
 
 function VehicleManagementView() {
   const dispatch = useDispatch();
-  const { vehicles, loadStatus, loadError, createStatus, updateStatus } = useSelector((state) => state.vehicles);
-  const [hiddenVehicleIds, setHiddenVehicleIds] = useState([]);
+  const { vehicles, loadStatus, loadError, createStatus, updateStatus, deleteStatus, deleteError } = useSelector((state) => state.vehicles);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
   const [page, setPage] = useState(1);
   const [dialog, setDialog] = useState(null);
+  const [pendingDelete, setPendingDelete] = useState(null);
   const [draft, setDraft] = useState(emptyDraft);
   const [error, setError] = useState("");
   const now = new Date();
@@ -69,11 +70,10 @@ function VehicleManagementView() {
     () =>
       vehicles.filter(
         (vehicle) =>
-          !hiddenVehicleIds.includes(vehicle.id) &&
-          `${vehicle.name} ${vehicle.id} ${vehicle.depot} ${vehicle.type} ${vehicle.status}`.toLowerCase().includes(search.toLowerCase()) &&
+          `${vehicle.name} ${vehicle.vehicleId} ${vehicle.depot} ${vehicle.type} ${vehicle.status}`.toLowerCase().includes(search.toLowerCase()) &&
           (status === "All" || vehicle.status === status),
       ),
-    [hiddenVehicleIds, search, status, vehicles],
+    [search, status, vehicles],
   );
   const pageCount = Math.max(1, Math.ceil(filteredVehicles.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
@@ -92,7 +92,8 @@ function VehicleManagementView() {
     setDraft({
       name: vehicle.name,
       category: vehicle.category,
-      id: vehicle.id,
+      id: vehicle.vehicleId,
+      recordId: vehicle.id,
       depot: vehicle.depot,
       type: vehicle.type === "Train" || vehicle.type === "2" ? "2" : "1",
       status: vehicle.status,
@@ -112,7 +113,7 @@ function VehicleManagementView() {
     }
     if (
       dialog === "add" &&
-      vehicles.some((vehicle) => vehicle.id.toLowerCase() === id.toLowerCase())
+      vehicles.some((vehicle) => vehicle.vehicleId.toLowerCase() === id.toLowerCase())
     ) {
       setError("A vehicle with this ID already exists.");
       return;
@@ -120,6 +121,7 @@ function VehicleManagementView() {
     const payload = {
       name: draft.name.trim(),
       vehicleId: id,
+      id: draft.recordId,
       depot: draft.depot.trim(),
       type: Number(draft.type),
       status: draft.status,
@@ -131,8 +133,17 @@ function VehicleManagementView() {
       setError(saveError);
     }
   }
-  function deleteVehicle(id) {
-    setHiddenVehicleIds((current) => [...current, id]);
+  function requestDelete(vehicle) {
+    setPendingDelete(vehicle);
+  }
+  async function confirmDelete() {
+    if (!pendingDelete) return;
+    try {
+      await dispatch(deleteVehicleRequest(pendingDelete.id)).unwrap();
+      setPendingDelete(null);
+    } catch {
+      // The Redux delete error is rendered in the confirmation dialog.
+    }
   }
 
   return (
@@ -253,7 +264,7 @@ function VehicleManagementView() {
                       key={vehicle.id}
                       vehicle={vehicle}
                       onEdit={openEdit}
-                      onDelete={deleteVehicle}
+                      onDelete={requestDelete}
                     />
                   ))}
                 </tbody>
@@ -334,12 +345,17 @@ function VehicleManagementView() {
           </DialogActions>
         </form>
       </Dialog>
+      <Dialog open={Boolean(pendingDelete)} onClose={() => setPendingDelete(null)} maxWidth="xs" fullWidth>
+        <DialogTitle className="vehicle-delete-title"><span className="vehicle-delete-icon"><DeleteOutlineOutlinedIcon /></span>Remove vehicle?</DialogTitle>
+        <DialogContent className="vehicle-delete-content"><p>This vehicle will be removed from the current fleet list.</p>{pendingDelete && <div className="vehicle-delete-summary"><strong>{pendingDelete.name}</strong><span>{pendingDelete.type}</span><small>{pendingDelete.depot} depot</small></div>}</DialogContent>
+        {deleteError && <p className="vehicle-delete-error">{deleteError}</p>}<DialogActions className="vehicle-delete-actions"><Button onClick={() => setPendingDelete(null)} disabled={deleteStatus === "loading"}>Cancel</Button><Button className="vehicle-confirm-delete" variant="contained" onClick={confirmDelete} disabled={deleteStatus === "loading"} startIcon={<DeleteOutlineOutlinedIcon />}>{deleteStatus === "loading" ? "Removing..." : "Remove vehicle"}</Button></DialogActions>
+      </Dialog>
     </div>
   );
 }
 
 function VehicleRow({ vehicle, onEdit, onDelete }) {
-  const { name, category, id, depot, type, status } = vehicle;
+  const { name, category, vehicleId, depot, type, status } = vehicle;
   const tone = statusTone[status] || "mint";
   return (
     <tr>
@@ -348,7 +364,7 @@ function VehicleRow({ vehicle, onEdit, onDelete }) {
         <small>{category}</small>
       </th>
       <td>
-        <strong>{id}</strong>
+        <strong>{vehicleId}</strong>
       </td>
       <td>{depot}</td>
       <td>
@@ -361,10 +377,10 @@ function VehicleRow({ vehicle, onEdit, onDelete }) {
         </span>
       </td>
       <td className="vehicle-actions">
-        <IconButton aria-label={`Edit ${id}`} onClick={() => onEdit(vehicle)}>
+        <IconButton aria-label={`Edit ${vehicleId}`} onClick={() => onEdit(vehicle)}>
           <EditOutlinedIcon />
         </IconButton>
-        <IconButton aria-label={`Delete ${id}`} onClick={() => onDelete(id)}>
+        <IconButton aria-label={`Delete ${vehicleId}`} onClick={() => onDelete(vehicle)}>
           <DeleteOutlineOutlinedIcon />
         </IconButton>
       </td>

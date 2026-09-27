@@ -17,3 +17,9 @@ export async function updateVehicle(vehicle) {
   if (data?.success === false) throw new Error(data.message || 'Unable to update this vehicle.')
   return data
 }
+
+export async function deleteVehicle(vehicleId) {
+  const { data } = await api.delete(`/vehicles/${vehicleId}`)
+  if (data?.success === false) throw new Error(data.message || 'Unable to remove this vehicle.')
+  return data
+}

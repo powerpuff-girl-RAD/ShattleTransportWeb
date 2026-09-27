@@ -1,14 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { createVehicle as createVehicleRequest, getVehicles as getVehiclesRequest, updateVehicle as updateVehicleRequest } from '../models/vehicleModel'
+import { createVehicle as createVehicleRequest, deleteVehicle as deleteVehicleRequest, getVehicles as getVehiclesRequest, updateVehicle as updateVehicleRequest } from '../models/vehicleModel'
 
 function normalizeVehicle(vehicle, fallback) {
   const result = vehicle?.vehicle || vehicle?.data?.vehicle || vehicle?.data || vehicle || {}
   const rawType = result.type ?? result.vehicleType ?? result.Type ?? fallback.type
   const type = rawType === 1 || rawType === '1' ? 'Bus' : rawType === 2 || rawType === '2' ? 'Train' : String(rawType)
+  const id = String(result.id ?? result.Id ?? fallback.id)
+  const vehicleId = String(result.vehicleId ?? result.VehicleId ?? fallback.vehicleId ?? id)
   return {
     name: String(result.name ?? result.vehicleName ?? result.Name ?? fallback.name),
-    vehicleId: String(result.vehicleId ?? result.id ?? result.VehicleId ?? fallback.vehicleId ?? fallback.id),
-    id: String(result.vehicleId ?? result.id ?? result.VehicleId ?? fallback.vehicleId ?? fallback.id),
+    vehicleId,
+    id,
     depot: String(result.depot ?? result.Depot ?? fallback.depot),
     type,
     status: String(result.status ?? result.Status ?? fallback.status),
@@ -59,9 +61,18 @@ export const updateVehicle = createAsyncThunk('vehicles/update', async (vehicle,
   }
 })
 
+export const deleteVehicle = createAsyncThunk('vehicles/delete', async (vehicleId, { rejectWithValue }) => {
+  try {
+    await deleteVehicleRequest(vehicleId)
+    return String(vehicleId)
+  } catch (error) {
+    return rejectWithValue(getError(error, 'Unable to remove this vehicle.'))
+  }
+})
+
 const vehicleSlice = createSlice({
   name: 'vehicles',
-  initialState: { vehicles: [], loadStatus: 'idle', loadError: null, createStatus: 'idle', createError: null, updateStatus: 'idle', updateError: null },
+  initialState: { vehicles: [], loadStatus: 'idle', loadError: null, createStatus: 'idle', createError: null, updateStatus: 'idle', updateError: null, deleteStatus: 'idle', deleteError: null },
   reducers: {
     clearVehicleCreateError(state) { state.createError = null },
     clearVehicleUpdateError(state) { state.updateError = null },
@@ -77,6 +88,9 @@ const vehicleSlice = createSlice({
       .addCase(updateVehicle.pending, (state) => { state.updateStatus = 'loading'; state.updateError = null })
       .addCase(updateVehicle.fulfilled, (state, action) => { state.updateStatus = 'succeeded'; state.vehicles = state.vehicles.map((vehicle) => vehicle.id === action.payload.id ? action.payload : vehicle) })
       .addCase(updateVehicle.rejected, (state, action) => { state.updateStatus = 'failed'; state.updateError = action.payload || 'Unable to update this vehicle.' })
+      .addCase(deleteVehicle.pending, (state) => { state.deleteStatus = 'loading'; state.deleteError = null })
+      .addCase(deleteVehicle.fulfilled, (state, action) => { state.deleteStatus = 'succeeded'; state.vehicles = state.vehicles.filter((vehicle) => vehicle.id !== action.payload) })
+      .addCase(deleteVehicle.rejected, (state, action) => { state.deleteStatus = 'failed'; state.deleteError = action.payload || 'Unable to remove this vehicle.' })
   },
 })
 

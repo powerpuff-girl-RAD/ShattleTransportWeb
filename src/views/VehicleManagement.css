@@ -28,6 +28,12 @@
 .vehicle-form-fields .MuiNativeSelect-select option { padding: 8px 12px; text-align: left; }
 .vehicle-form-fields .MuiSelect-select { padding: 14px !important; text-align: left; line-height: 1.4; }
 .MuiMenu-paper .MuiMenuItem-root { min-height: 40px; padding: 8px 16px; font-size: 14px; }
+.vehicle-delete-title.MuiDialogTitle-root { display: flex; align-items: center; gap: 10px; padding: 20px 24px 8px; color: #293d45; font-size: 17px; font-weight: 700; }
+.vehicle-delete-icon { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 8px; color: #c34c40; background: #fff0ed; }.vehicle-delete-icon svg { font-size: 19px; }
+.vehicle-delete-content.MuiDialogContent-root { padding: 5px 24px 16px; }.vehicle-delete-content > p { margin: 0 0 13px; color: #718188; font-size: 12px; line-height: 1.5; }
+.vehicle-delete-error { margin: 0 24px; color: #bd493f; font-size: 11px; }
+.vehicle-delete-summary { display: flex; flex-direction: column; gap: 3px; padding: 11px 12px; border: 1px solid #e2ebe7; border-radius: 7px; background: #f5f9f7; }.vehicle-delete-summary strong { color: #30454d; font-size: 12px; }.vehicle-delete-summary span { color: #6d8086; font-size: 11px; }.vehicle-delete-summary small { color: #93a0a3; font-size: 9px; }
+.vehicle-delete-actions.MuiDialogActions-root { gap: 8px; padding: 10px 24px 20px; }.vehicle-delete-actions .MuiButton-root { min-height: 34px; border-radius: 6px; font-size: 11px; text-transform: none; }.vehicle-confirm-delete.MuiButton-root { color: #fff; background: #bf463c; box-shadow: none; }.vehicle-confirm-delete.MuiButton-root:hover { background: #a93a32; box-shadow: none; }.vehicle-confirm-delete svg { font-size: 15px; }
 .vehicle-page .publish-alert { min-height: 32px; border: 1px solid #cbded7; border-radius: 8px; color: #19584d; background: #fff; font-size: 9px; font-weight: 700; text-transform: none; }
 .vehicle-page .publish-alert svg { font-size: 14px; }
 .vehicle-page .service-kpi-head { justify-content: flex-start; gap: 7px; }
