@@ -105,13 +105,18 @@ function UserManagementView() {
       return 0
     })
 
-  const currentMonth = new Date().toISOString().slice(0, 7);
+  const now = new Date()
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+  const currentMonthLabel = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(now)
   const pageCount = Math.max(1, Math.ceil(filteredUsers.length / rowsPerPage))
   const currentPage = Math.min(page, pageCount)
   const visibleUsers = filteredUsers.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
   const activeUsers = users.filter((user) => getUserStatus(user) === 'Active').length
   const suspendedUsers = users.filter((user) => getUserStatus(user) === 'Suspended').length
   const newUsersThisMonth = users.filter((user) => user.registered.startsWith(currentMonth)).length
+  const activeRate = users.length ? (activeUsers / users.length) * 100 : 0
+  const suspendedRate = users.length ? (suspendedUsers / users.length) * 100 : 0
+  const newUserRate = users.length ? (newUsersThisMonth / users.length) * 100 : 0
 
   function openCreateDialog() {
     setEditingUser(null)
@@ -221,10 +226,10 @@ function UserManagementView() {
 
         <>
             <section className="user-metrics-grid" aria-label="User account summary">
-              <MetricCard label="TOTAL USERS" value={users.length.toLocaleString()} change="+12.4%" note="registered transit users" tone="teal" />
-              <MetricCard label="ACTIVE USERS" value={activeUsers.toLocaleString()} change="93.5% Rate" note="currently on system" tone="green" />
-              <MetricCard label="SUSPENDED" value={suspendedUsers.toLocaleString()} change="4.4% Rate" note="accounts flagged/inactive" tone="red" />
-              <MetricCard label="NEW THIS MONTH" value={newUsersThisMonth.toLocaleString()} change="+15.2%" note="registered in Oct 2026" tone="orange" />
+              <MetricCard label="TOTAL USERS" value={users.length.toLocaleString()} change={`${users.length.toLocaleString()} records`} note="registered transit users" tone="teal" />
+              <MetricCard label="ACTIVE USERS" value={activeUsers.toLocaleString()} change={`${activeRate.toFixed(1)}% Rate`} note="currently on system" tone="green" />
+              <MetricCard label="SUSPENDED" value={suspendedUsers.toLocaleString()} change={`${suspendedRate.toFixed(1)}% Rate`} note="accounts flagged/inactive" tone="red" />
+              <MetricCard label="NEW THIS MONTH" value={newUsersThisMonth.toLocaleString()} change={`${newUserRate.toFixed(1)}% Rate`} note={`registered in ${currentMonthLabel}`} tone="orange" />
             </section>
 
             <section className="user-directory-panel">
