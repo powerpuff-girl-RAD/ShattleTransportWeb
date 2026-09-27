@@ -1,0 +1,80 @@
+.timetable-page { min-height: 100vh; color: #293c46; background: #f4f7f9; }
+.timetable-topbar { display: flex; min-height: 60px; align-items: center; gap: 15px; padding: 0 25px; border-bottom: 1px solid #e1e7eb; background: #fff; }
+.timetable-topbar h1 { overflow: hidden; margin: 0; color: #263943; font-size: 16px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.timetable-live { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 5px; color: #25594e; background: #e4f6ee; font-size: 8px; font-weight: 700; white-space: nowrap; }
+.timetable-live i, .timetable-notifications i { width: 5px; height: 5px; border-radius: 50%; background: #25bd77; }
+.timetable-search { width: 205px; margin-left: auto; }
+.timetable-search .MuiOutlinedInput-root { height: 29px; border-radius: 6px; background: #f4f7f9; font-size: 10px; }
+.timetable-search .MuiOutlinedInput-notchedOutline { border-color: transparent; }
+.timetable-search .MuiInputAdornment-root { color: #94a0a4; }
+.timetable-search .MuiInputAdornment-root svg { font-size: 15px; }
+.timetable-search input { padding: 5px 0; }
+.timetable-notifications.MuiIconButton-root { position: relative; width: 31px; height: 31px; color: #344750; background: #f4f7f9; }
+.timetable-notifications svg { font-size: 17px; }
+.timetable-notifications i { position: absolute; top: 5px; right: 6px; background: #f19a22; }
+.timetable-toolbar { display: flex; min-height: 58px; align-items: center; justify-content: space-between; gap: 14px; padding: 0 25px; border-bottom: 1px solid #e1e7eb; background: #fff; }
+.timetable-filters { display: flex; min-width: 0; align-items: center; gap: 10px; }
+.timetable-filters > strong { color: #849297; font-size: 9px; }
+.route-filter { display: flex; width: 170px; min-height: 30px; align-items: center; justify-content: space-between; gap: 5px; padding: 0 7px 0 10px; border: 1px solid #e0e6e8; border-radius: 6px; color: #344750; background: #fff; font-size: 10px; font-weight: 600; cursor: pointer; }
+.route-filter svg { color: #89979b; font-size: 18px; }
+.day-filter { display: flex; gap: 6px; }
+.day-filter button { min-width: 39px; min-height: 25px; padding: 0 9px; border: 0; border-radius: 14px; color: #879497; background: #f1f4f6; font-size: 9px; font-weight: 700; cursor: pointer; }
+.day-filter button:hover, .day-filter .day-selected { color: #fff; background: #064d43; }
+.timetable-toolbar > .MuiButton-root { min-height: 31px; padding: 0 14px; border-radius: 6px; color: #fff; background: #eb7d17; box-shadow: none; font-size: 9px; font-weight: 700; text-transform: uppercase; }
+.timetable-toolbar > .MuiButton-root:hover { background: #d97010; box-shadow: none; }
+.timetable-toolbar > .MuiButton-root svg { font-size: 15px; }
+.timetable-content { display: grid; grid-template-columns: minmax(0, 1fr) 273px; align-items: start; gap: 20px; padding: 27px 25px 36px; }
+.schedule-panel, .schedule-editor { border: 1px solid #dfe6e9; border-radius: 10px; background: #fff; }
+.schedule-panel { min-width: 0; padding: 20px 19px 18px; }
+.schedule-heading { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 17px; }
+.schedule-heading h2, .schedule-editor h2 { margin: 0; color: #2c3e47; font-size: 13px; font-weight: 700; }
+.schedule-heading div { display: flex; align-items: center; gap: 6px; color: #7f8d91; font-size: 9px; }
+.legend-peak, .legend-offpeak { width: 7px; height: 7px; border-radius: 50%; background: #ef821c; }
+.legend-offpeak { margin-left: 8px; background: #879497; }
+.schedule-scroll { overflow-x: auto; }
+.schedule-grid { display: grid; grid-template-columns: 108px repeat(7, minmax(58px, 1fr)); min-width: 620px; }
+.schedule-grid-head { min-height: 33px; align-items: center; padding: 0 10px; color: #869499; background: #f2f5f7; font-size: 9px; font-weight: 700; }
+.schedule-grid-head span:not(:first-child) { text-align: center; }
+.schedule-row { min-height: 113px; align-items: stretch; padding: 14px 10px 11px; border-bottom: 1px solid #e6ebed; cursor: pointer; }
+.schedule-row:hover, .schedule-row-selected { background: #fffdfa; }
+.route-label { display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+.route-label strong { color: #30434d; font-size: 11px; }
+.route-label span { overflow: hidden; color: #8b989c; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.departure-list { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.departure-list span { display: flex; width: max-content; min-width: 43px; align-items: center; gap: 4px; padding: 2px 4px; border-radius: 3px; font-size: 9px; font-weight: 600; }
+.departure-list i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.offpeak-time { color: #61737a; background: #f1f4f6; }
+.peak-time { color: #ef821c; background: #fff1e4; }
+.schedule-editor { padding: 17px 16px 15px; }
+.schedule-editor h2 { margin-bottom: 14px; }
+.selected-route-details { display: flex; flex-direction: column; gap: 9px; padding: 12px 10px 10px; border-radius: 6px; background: #f3f6f8; }
+.selected-route-details > strong { color: #344750; font-size: 10px; }
+.selected-route-details > b { color: #ed7d18; font-size: 10px; }
+.selected-route-details dl { display: grid; gap: 3px; margin: 0; }
+.selected-route-details dt { margin-top: 2px; color: #98a3a6; font-size: 8px; }
+.selected-route-details dd { margin: 0; color: #344750; font-size: 10px; font-weight: 600; }
+.schedule-editor label { display: flex; flex-direction: column; gap: 4px; margin-top: 14px; color: #89979b; font-size: 8px; font-weight: 700; }
+.schedule-editor label .MuiOutlinedInput-root { height: 31px; font-size: 11px; }
+.schedule-editor label .MuiOutlinedInput-notchedOutline { border-color: #e0e6e8; }
+.schedule-editor label input { padding: 6px 9px; }
+.schedule-editor .MuiButton-root { width: 100%; min-height: 35px; margin-top: 14px; border-radius: 6px; font-size: 9px; font-weight: 700; text-transform: uppercase; }
+.save-schedule { color: #fff !important; background: #eb7d17 !important; box-shadow: none !important; }
+.analyse-schedule { margin-top: 7px !important; border-color: #eb7d17 !important; color: #df7412 !important; }
+
+@media (max-width: 950px) {
+  .timetable-content { grid-template-columns: minmax(0, 1fr) 245px; gap: 14px; padding-right: 16px; padding-left: 16px; }
+  .timetable-toolbar { padding-right: 16px; padding-left: 16px; }
+  .timetable-topbar { padding-right: 16px; padding-left: 16px; }
+  .day-filter { gap: 3px; }
+  .day-filter button { min-width: 32px; padding: 0 6px; }
+}
+@media (max-width: 720px) {
+  .timetable-topbar { min-height: 54px; flex-wrap: wrap; gap: 8px; padding: 8px 12px; }
+  .timetable-topbar h1 { max-width: calc(100% - 60px); font-size: 13px; }
+  .timetable-search { display: none; }
+  .timetable-notifications { margin-left: auto; }
+  .timetable-toolbar { min-height: 88px; align-items: flex-start; flex-direction: column; gap: 10px; padding: 12px; }
+  .timetable-filters { width: 100%; overflow-x: auto; }
+  .timetable-toolbar > .MuiButton-root { align-self: flex-end; }
+  .timetable-content { grid-template-columns: 1fr; gap: 12px; padding: 14px 12px 24px; }
+}

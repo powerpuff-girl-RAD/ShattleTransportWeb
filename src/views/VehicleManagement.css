@@ -1,0 +1,12 @@
+.vehicle-page .service-kpi-icon { color: #20806b; background: #ddf3e9; }
+.vehicle-page .vehicle-table th:first-child { padding-left: 9px; }
+.vehicle-page .vehicle-table tbody th { padding-left: 9px; }
+.vehicle-page .vehicle-table tbody th::before { display: none; }
+.vehicle-page .vehicle-table tbody th b { font-size: 8px; }
+.vehicle-page .vehicle-table tbody th small { font-size: 7px; }
+.vehicle-actions { display: flex; align-items: center; gap: 4px; }
+.vehicle-actions .MuiIconButton-root { width: 20px; height: 20px; border-radius: 5px; color: #187765; background: #e5f2ee; }
+.vehicle-actions .MuiIconButton-root:nth-child(2) { color: #d76058; background: #fbe9e7; }
+.vehicle-actions .MuiIconButton-root:nth-child(3) { color: #e4931e; background: #fff0da; }
+.vehicle-actions .MuiIconButton-root svg { font-size: 12px; }
+.vehicle-actions .MuiIconButton-root span { font-size: 11px; }
