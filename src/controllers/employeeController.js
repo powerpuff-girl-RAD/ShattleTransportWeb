@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { deleteUserAccount, getUsers, registerUserAccount, updateUserAccount } from '../models/authModel'
+import { deleteUserAccount, getUsers, registerUserAccount, updateUserAccount } from '../models/userModel'
 
 function normalizeUser(user, index) {
   const isActive = user.isActive ?? user.IsActive

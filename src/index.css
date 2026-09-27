@@ -25,3 +25,16 @@ button:focus-visible, a:focus-visible {
 }
 
 ::selection { color: #fff; background: #087665; }
+
+/* Keep dense operational screens readable without changing their layout grid. */
+body :where(p, span, small, strong, b, button, input, select, textarea, label, th, td, dt, dd) {
+  font-size: max(1em, 12px) !important;
+}
+
+body :where(h1, h2, h3, h4, h5, h6) {
+  font-size: max(1em, 16px) !important;
+}
+
+body :where(.MuiInputBase-root, .MuiInputLabel-root, .MuiFormHelperText-root) {
+  font-size: max(1em, 13px) !important;
+}

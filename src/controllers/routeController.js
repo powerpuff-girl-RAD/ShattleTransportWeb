@@ -4,7 +4,7 @@ import {
   getRoutes as getRoutesRequest,
   updateRoute as updateRouteRequest,
   updateRouteStatus as updateRouteStatusRequest,
-} from '../models/authModel'
+} from '../models/routeModel'
 
 function normalizeRoute(route, index = 0) {
   const routeNumber = String(route.routeNumber ?? route.RouteNumber ?? '')
