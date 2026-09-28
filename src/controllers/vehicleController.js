@@ -7,6 +7,8 @@ function normalizeVehicle(vehicle, fallback) {
   const type = rawType === 1 || rawType === '1' ? 'Bus' : rawType === 2 || rawType === '2' ? 'Train' : String(rawType)
   const id = String(result.id ?? result.Id ?? fallback.id)
   const vehicleId = String(result.vehicleId ?? result.VehicleId ?? fallback.vehicleId ?? id)
+  const rawSeats = result.seats ?? result.seat ?? result.Seats ?? result.Seat ?? fallback.seats
+  const seats = Number(rawSeats) || 0
   return {
     name: String(result.name ?? result.vehicleName ?? result.Name ?? fallback.name),
     vehicleId,
@@ -14,6 +16,7 @@ function normalizeVehicle(vehicle, fallback) {
     depot: String(result.depot ?? result.Depot ?? fallback.depot),
     type,
     status: String(result.status ?? result.Status ?? fallback.status),
+    seats,
   }
 }
 
@@ -46,7 +49,7 @@ export const fetchVehicles = createAsyncThunk('vehicles/fetchAll', async (_, { r
     const response = await getVehiclesRequest()
     const vehicles = unwrapVehicles(response)
     if (!vehicles) return rejectWithValue('The vehicles endpoint returned an unexpected response.')
-    return vehicles.map((vehicle, index) => normalizeVehicle(vehicle, { id: `vehicle-${index + 1}`, vehicleId: `vehicle-${index + 1}`, name: '', category: 'Bus', depot: '', type: 'Bus', status: 'Active' }))
+    return vehicles.map((vehicle, index) => normalizeVehicle(vehicle, { id: `vehicle-${index + 1}`, vehicleId: `vehicle-${index + 1}`, name: '', category: 'Bus', depot: '', type: 'Bus', status: 'Active', seats: 0 }))
   } catch (error) {
     return rejectWithValue(getError(error, 'Unable to load vehicles.'))
   }

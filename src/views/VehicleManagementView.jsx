@@ -35,6 +35,7 @@ const emptyDraft = {
   depot: "",
   type: "1",
   status: "Active",
+  seats: "",
 };
 const statusTone = {
   Active: "mint",
@@ -97,6 +98,7 @@ function VehicleManagementView() {
       depot: vehicle.depot,
       type: vehicle.type === "Train" || vehicle.type === "2" ? "2" : "1",
       status: vehicle.status,
+      seats: vehicle.seats != null ? String(vehicle.seats) : "",
     });
     setError("");
     setDialog("edit");
@@ -125,6 +127,7 @@ function VehicleManagementView() {
       depot: draft.depot.trim(),
       type: Number(draft.type),
       status: draft.status,
+      seats: Number(draft.seats) || 0,
     };
     try {
       await dispatch(dialog === "add" ? createVehicle(payload) : updateVehicle(payload)).unwrap();
@@ -253,12 +256,13 @@ function VehicleManagementView() {
                     <th>VEHICLE ID</th>
                     <th>DEPOT</th>
                     <th>TYPE</th>
+                    <th>SEATS</th>
                     <th>STATUS</th>
                     <th>ACTIONS</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {loadStatus === "loading" && <tr><td className="vehicle-empty-state" colSpan="6">Loading vehicles…</td></tr>}
+                  {loadStatus === "loading" && <tr><td className="vehicle-empty-state" colSpan="7">Loading vehicles…</td></tr>}
                   {loadStatus !== "loading" && paginatedVehicles.map((vehicle) => (
                     <VehicleRow
                       key={vehicle.id}
@@ -315,6 +319,13 @@ function VehicleManagementView() {
               onChange={(event) => updateDraft("depot", event.target.value)}
             />
             <TextField
+              label="Seats"
+              type="number"
+              value={draft.seats}
+              onChange={(event) => updateDraft("seats", event.target.value)}
+              slotProps={{ htmlInput: { min: 0 } }}
+            />
+            <TextField
               select
               label="Type"
               value={draft.type}
@@ -355,7 +366,7 @@ function VehicleManagementView() {
 }
 
 function VehicleRow({ vehicle, onEdit, onDelete }) {
-  const { name, category, vehicleId, depot, type, status } = vehicle;
+  const { name, category, vehicleId, depot, type, status, seats } = vehicle;
   const tone = statusTone[status] || "mint";
   return (
     <tr>
@@ -370,6 +381,7 @@ function VehicleRow({ vehicle, onEdit, onDelete }) {
       <td>
         <strong>{type}</strong>
       </td>
+      <td>{seats}</td>
       <td>
         <span className={`service-status status-${tone}`}>
           <i />
