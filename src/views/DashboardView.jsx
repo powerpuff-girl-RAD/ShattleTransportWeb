@@ -17,6 +17,7 @@ import DirectionsBusOutlinedIcon from '@mui/icons-material/DirectionsBusOutlined
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined'
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
+import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
@@ -25,6 +26,7 @@ import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
 import { signOut } from '../controllers/authController'
 import RoutesView from './RoutesView'
 import TimetableView from './TimetableView'
+import TripAssignmentView from './TripAssignmentView'
 import UserManagementView from './UserManagementView'
 import VehicleManagementView from './VehicleManagementView'
 import './Dashboard.css'
@@ -35,6 +37,7 @@ const navigation = [
   { label: 'Passengers & Journeys', Icon: GroupsOutlinedIcon },
   { label: 'Overcrowding', Icon: WarningAmberOutlinedIcon },
   { label: 'Timetable', Icon: CalendarMonthOutlinedIcon },
+  { label: 'Schedule Management', Icon: ScheduleOutlinedIcon },
   { label: 'Routes', Icon: FmdGoodOutlinedIcon },
   { label: 'Fare Management', Icon: CreditCardOutlinedIcon },
   { label: 'Financial', Icon: BarChartOutlinedIcon },
@@ -318,7 +321,7 @@ function DashboardView() {
     <main className="dashboard-shell">
       <Sidebar active={activeNav} onSelect={setActiveNav} user={user} onSignOut={() => dispatch(signOut())} />
       <div className="dashboard-main">
-        {activeNav === 'Settings' ? <UserManagementView /> : activeNav === 'Routes' ? <RoutesView /> : activeNav === 'Timetable' ? <TimetableView /> : activeNav === 'Vehicle Management' ? <VehicleManagementView /> : (
+        {activeNav === 'Settings' ? <UserManagementView /> : activeNav === 'Routes' ? <RoutesView /> : activeNav === 'Timetable' ? <TimetableView /> : activeNav === 'Schedule Management' ? <TripAssignmentView /> : activeNav === 'Vehicle Management' ? <VehicleManagementView /> : (
           <>
             <header className="dashboard-topbar">
               <h1>Shattle Transport Manager - Operations Console</h1>
