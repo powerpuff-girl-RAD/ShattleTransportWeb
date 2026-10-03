@@ -24,6 +24,7 @@ import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import ShowChartOutlinedIcon from '@mui/icons-material/ShowChartOutlined'
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
 import { signOut } from '../controllers/authController'
+import FareManagementView from './FareManagementView'
 import RoutesView from './RoutesView'
 import TimetableView from './TimetableView'
 import TripAssignmentView from './TripAssignmentView'
@@ -321,7 +322,7 @@ function DashboardView() {
     <main className="dashboard-shell">
       <Sidebar active={activeNav} onSelect={setActiveNav} user={user} onSignOut={() => dispatch(signOut())} />
       <div className="dashboard-main">
-        {activeNav === 'Settings' ? <UserManagementView /> : activeNav === 'Routes' ? <RoutesView /> : activeNav === 'Timetable' ? <TimetableView /> : activeNav === 'Schedule Management' ? <TripAssignmentView /> : activeNav === 'Vehicle Management' ? <VehicleManagementView /> : (
+        {activeNav === 'Settings' ? <UserManagementView /> : activeNav === 'Routes' ? <RoutesView /> : activeNav === 'Timetable' ? <TimetableView /> : activeNav === 'Schedule Management' ? <TripAssignmentView /> : activeNav === 'Vehicle Management' ? <VehicleManagementView /> : activeNav === 'Fare Management' ? <FareManagementView /> : (
           <>
             <header className="dashboard-topbar">
               <h1>Shattle Transport Manager - Operations Console</h1>
