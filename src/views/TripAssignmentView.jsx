@@ -31,7 +31,7 @@ import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import { fetchEmployees } from '../controllers/employeeController'
 import { fetchRoutes } from '../controllers/routeController'
-import { createSchedule, deleteSchedule, fetchSchedules, updateSchedule } from '../controllers/scheduleController'
+import { createSchedule, deleteSchedule, fetchScheduleById, fetchSchedules, updateSchedule } from '../controllers/scheduleController'
 import { fetchVehicles } from '../controllers/vehicleController'
 import './ServiceManagement.css'
 import './VehicleManagement.css'
@@ -257,6 +257,10 @@ function TripAssignmentView() {
     })
     setError('')
     setDialog('edit')
+    dispatch(fetchScheduleById(assignment.id))
+      .unwrap()
+      .then((latest) => setDraft((current) => (current.id === latest.id ? { ...current, qrCode: latest.qrCode } : current)))
+      .catch(() => {})
   }
   function updateDraft(field, value) {
     setDraft((current) => ({ ...current, [field]: value }))
@@ -553,6 +557,11 @@ function TripAssignmentView() {
                 <MenuItem key={status} value={status}>{status}</MenuItem>
               ))}
             </TextField>
+            {dialog === 'edit' && (draft.qrCode || draft.qrcode || draft.qr_code) && (
+              <div style={{ textAlign: 'center' }}>
+                <img src={draft.qrCode || draft.qrcode || draft.qr_code} alt="Assignment QR code" style={{ width: 180, height: 180 }} />
+              </div>
+            )}
             {error && <p className="vehicle-form-error">{error}</p>}
           </DialogContent>
           <DialogActions>

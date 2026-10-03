@@ -3,6 +3,7 @@ import {
   createSchedule as createScheduleRequest,
   deleteSchedule as deleteScheduleRequest,
   getSchedules as getSchedulesRequest,
+  getScheduleById as getScheduleByIdRequest,
   updateSchedule as updateScheduleRequest,
 } from '../models/scheduleModel'
 
@@ -18,6 +19,7 @@ function normalizeSchedule(schedule, fallback = {}) {
     vehicleId: String(result.vehicleId ?? result.VehicleId ?? fallback.vehicleId ?? ''),
     inspectorId: String(result.inspectorId ?? result.InspectorId ?? fallback.inspectorId ?? ''),
     status: String(result.status ?? result.Status ?? fallback.status ?? ''),
+    qrCode: String(result.qrCode ?? result.QrCode ?? result.qrcode ?? result.qr_code ?? result.QRCode ?? fallback.qrCode ?? ''),
   }
 }
 
@@ -44,6 +46,14 @@ export const fetchSchedules = createAsyncThunk('schedules/fetchAll', async (_, {
     return schedules.map((schedule) => normalizeSchedule(schedule))
   } catch (error) {
     return rejectWithValue(getError(error, 'Unable to load schedules.'))
+  }
+})
+
+export const fetchScheduleById = createAsyncThunk('schedules/fetchOne', async (id, { rejectWithValue }) => {
+  try {
+    return normalizeSchedule(await getScheduleByIdRequest(id))
+  } catch (error) {
+    return rejectWithValue(getError(error, 'Unable to load this schedule.'))
   }
 })
 

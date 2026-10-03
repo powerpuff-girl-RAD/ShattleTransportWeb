@@ -6,6 +6,12 @@ export async function getSchedules() {
   return data
 }
 
+export async function getScheduleById(id) {
+  const { data } = await api.get(`/schedules/${encodeURIComponent(id)}`)
+  if (data?.success === false) throw new Error(data.message || 'Unable to load this schedule.')
+  return data
+}
+
 export async function createSchedule(schedule) {
   const { data } = await api.post('/schedules', schedule)
   if (data?.success === false) throw new Error(data.message || 'Unable to create this schedule.')
