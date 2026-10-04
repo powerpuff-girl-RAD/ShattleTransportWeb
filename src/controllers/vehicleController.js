@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { createVehicle as createVehicleRequest, deleteVehicle as deleteVehicleRequest, getVehicles as getVehiclesRequest, updateVehicle as updateVehicleRequest } from '../models/vehicleModel'
+import { createVehicle as createVehicleRequest, deleteVehicle as deleteVehicleRequest, getVehicles as getVehiclesRequest, updateVehicle as updateVehicleRequest } from '../services/vehicleService'
 
 function normalizeVehicle(vehicle, fallback) {
   const result = vehicle?.vehicle || vehicle?.data?.vehicle || vehicle?.data || vehicle || {}

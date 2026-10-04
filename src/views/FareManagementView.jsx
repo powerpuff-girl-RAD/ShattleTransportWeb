@@ -7,7 +7,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import { useDispatch, useSelector } from 'react-redux'
 import { Alert, Button, CircularProgress, IconButton, InputAdornment, Menu, MenuItem, TextField } from '@mui/material'
 import { fetchRoutes } from '../controllers/routeController'
-import { getFareConfig, updateFareConfig } from '../models/fareModel'
+import { getFareConfig, updateFareConfig } from '../services/fareService'
 import './FareManagement.css'
 
 const passNames = ['Daily Pass', 'Weekly Pass', 'Monthly Pass']

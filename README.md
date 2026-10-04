@@ -1,5 +1,22 @@
 # React + Vite
 
+## Service / Repository architecture
+
+API access for authentication, users, vehicles, routes, schedules, and fares
+lives in `src/repositories/`. Feature operations and business logic are exposed
+through matching modules in `src/services/`; controllers and views should use
+services rather than call the API client or repositories directly. Existing
+`src/models/` feature modules remain as compatibility re-exports while callers
+migrate.
+
+Fare pricing is implemented by `calculateFare(config, journey)` in
+`src/services/fareStrategies.js`. It chooses a distance or flat-fare strategy,
+then applies a matching time-based adjustment. Weekday time rules require a
+departure date. The result contains the base fare, time adjustment, total,
+currency, and matching rule IDs.
+
+Run `npm test` to verify the fare calculation strategies.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

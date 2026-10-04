@@ -4,7 +4,7 @@ import {
   login,
   readAuthSession,
   saveAuthSession,
-} from '../models/authModel'
+} from '../services/authService'
 
 const storedSession = readAuthSession()
 

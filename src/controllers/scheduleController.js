@@ -5,7 +5,7 @@ import {
   getSchedules as getSchedulesRequest,
   getScheduleById as getScheduleByIdRequest,
   updateSchedule as updateScheduleRequest,
-} from '../models/scheduleModel'
+} from '../services/scheduleService'
 
 function normalizeSchedule(schedule, fallback = {}) {
   const result = schedule?.schedule || schedule?.data?.schedule || schedule?.data || schedule || {}
