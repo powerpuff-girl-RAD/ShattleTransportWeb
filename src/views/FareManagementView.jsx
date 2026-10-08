@@ -57,7 +57,7 @@ function normalizeCommon(value) {
   const visitor = read(config, 'visitorPass', 'visitorArrangement', 'VisitorPass') || {}
   const flatFares = read(config, 'flatFares', 'flatFare', 'FlatFares') || []
   const distanceFare = read(config, 'distanceFare', 'DistanceFare', 'distanceFares', 'DistanceFares') || []
-  const timeFares = read(config, 'timeBasedFares', 'timeFares', 'timeBands', 'TimeBasedFares')
+  const timeFares = read(config, 'timeBasedFare', 'timeBasedFares', 'timeFares', 'timeBands', 'TimeBasedFares')
   const passProducts = read(config, 'passes', 'standardPasses', 'passPrices', 'Passes', 'farePass', 'farePasses', 'FarePass') || {}
   const sourcePasses = Array.isArray(passProducts) ? passProducts : []
   const hasFarePassRows = read(config, 'farePass', 'farePasses', 'FarePass') !== undefined || sourcePasses.some((item) => read(item, 'PassProduct', 'passProduct') !== undefined)
@@ -127,6 +127,12 @@ function normalizeCommon(value) {
   }
 }
 
+function withRouteFlatFares(allFares, routeFares) {
+  const all = unwrap(allFares)
+  const route = unwrap(routeFares)
+  return { ...all, flatFares: read(route, 'flatFares', 'flatFare', 'FlatFares') || [] }
+}
+
 function normalizeDistance(value) {
   const result = unwrap(value)
   const rows = Array.isArray(result) ? result : read(result, 'distanceRanges', 'ranges', 'fareSlabs', 'fareBands', 'fares', 'DistanceRanges', 'FareBands') || []
@@ -169,7 +175,7 @@ function FareManagementView() {
         const firstActiveRoute = routes.find((route) => route.active)
         if (!firstActiveRoute) throw new Error('No active routes are available for fare configuration.')
         setRouteId(firstActiveRoute.id)
-        return getFareConfig(firstActiveRoute.id)
+        return Promise.all([getFareConfig(), getFareConfig(firstActiveRoute.id)]).then(([allFares, routeFares]) => withRouteFlatFares(allFares, routeFares))
       })
       .then((commonResult) => {
         if (!current || !commonResult) return
@@ -204,7 +210,7 @@ function FareManagementView() {
     setSaveMessage('')
     try {
       const result = await getFareConfig(nextRouteId)
-      if (requestId === commonRequestId.current) setCommon(normalizeCommon(result))
+      if (requestId === commonRequestId.current) setCommon((current) => ({ ...current, flatFares: normalizeCommon(result).flatFares }))
     } catch (error) {
       if (requestId === commonRequestId.current) setLoadError(error.message || 'Unable to load fare configuration for this route.')
     } finally {

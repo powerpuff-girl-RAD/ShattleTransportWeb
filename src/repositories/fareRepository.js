@@ -7,7 +7,7 @@ export async function getFareConfig(routeId) {
 }
 
 export async function updateFareConfig(config) {
-  const { data } = await api.post('/fare/', config)
+  const { data } = await api.put('/fare/', config)
   if (data?.success === false) throw new Error(data.message || 'Unable to save fare settings.')
   return data
 }
