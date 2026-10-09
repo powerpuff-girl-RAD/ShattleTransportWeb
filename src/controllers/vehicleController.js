@@ -35,10 +35,12 @@ function getError(error, fallback) {
   return error.response?.data?.message || error.response?.data?.error || error.message || fallback
 }
 
-export const createVehicle = createAsyncThunk('vehicles/create', async (vehicle, { rejectWithValue }) => {
+export const createVehicle = createAsyncThunk('vehicles/create', async (vehicle, { dispatch, rejectWithValue }) => {
   try {
     const response = await createVehicleRequest(vehicle)
-    return normalizeVehicle(response, vehicle)
+    const saved = normalizeVehicle(response, vehicle)
+    const refreshed = fetchVehicles.fulfilled.match(await dispatch(fetchVehicles()))
+    return { saved, refreshed }
   } catch (error) {
     return rejectWithValue(getError(error, 'Unable to create this vehicle.'))
   }
@@ -55,10 +57,12 @@ export const fetchVehicles = createAsyncThunk('vehicles/fetchAll', async (_, { r
   }
 })
 
-export const updateVehicle = createAsyncThunk('vehicles/update', async (vehicle, { rejectWithValue }) => {
+export const updateVehicle = createAsyncThunk('vehicles/update', async (vehicle, { dispatch, rejectWithValue }) => {
   try {
     const response = await updateVehicleRequest(vehicle)
-    return normalizeVehicle(response, vehicle)
+    const saved = normalizeVehicle(response, vehicle)
+    const refreshed = fetchVehicles.fulfilled.match(await dispatch(fetchVehicles()))
+    return { saved, refreshed }
   } catch (error) {
     return rejectWithValue(getError(error, 'Unable to update this vehicle.'))
   }
@@ -73,6 +77,13 @@ export const deleteVehicle = createAsyncThunk('vehicles/delete', async (vehicleI
   }
 })
 
+// Only used when the post-save refetch fails.
+function upsertVehicle(state, vehicle) {
+  const index = state.vehicles.findIndex((item) => item.id === vehicle.id)
+  if (index === -1) state.vehicles.push(vehicle)
+  else state.vehicles[index] = vehicle
+}
+
 const vehicleSlice = createSlice({
   name: 'vehicles',
   initialState: { vehicles: [], loadStatus: 'idle', loadError: null, createStatus: 'idle', createError: null, updateStatus: 'idle', updateError: null, deleteStatus: 'idle', deleteError: null },
@@ -86,10 +97,10 @@ const vehicleSlice = createSlice({
       .addCase(fetchVehicles.fulfilled, (state, action) => { state.loadStatus = 'succeeded'; state.vehicles = action.payload })
       .addCase(fetchVehicles.rejected, (state, action) => { state.loadStatus = 'failed'; state.loadError = action.payload || 'Unable to load vehicles.' })
       .addCase(createVehicle.pending, (state) => { state.createStatus = 'loading'; state.createError = null })
-      .addCase(createVehicle.fulfilled, (state, action) => { state.createStatus = 'succeeded'; state.vehicles.push(action.payload) })
+      .addCase(createVehicle.fulfilled, (state, action) => { state.createStatus = 'succeeded'; if (!action.payload.refreshed) upsertVehicle(state, action.payload.saved) })
       .addCase(createVehicle.rejected, (state, action) => { state.createStatus = 'failed'; state.createError = action.payload || 'Unable to create this vehicle.' })
       .addCase(updateVehicle.pending, (state) => { state.updateStatus = 'loading'; state.updateError = null })
-      .addCase(updateVehicle.fulfilled, (state, action) => { state.updateStatus = 'succeeded'; state.vehicles = state.vehicles.map((vehicle) => vehicle.id === action.payload.id ? action.payload : vehicle) })
+      .addCase(updateVehicle.fulfilled, (state, action) => { state.updateStatus = 'succeeded'; if (!action.payload.refreshed) upsertVehicle(state, action.payload.saved) })
       .addCase(updateVehicle.rejected, (state, action) => { state.updateStatus = 'failed'; state.updateError = action.payload || 'Unable to update this vehicle.' })
       .addCase(deleteVehicle.pending, (state) => { state.deleteStatus = 'loading'; state.deleteError = null })
       .addCase(deleteVehicle.fulfilled, (state, action) => { state.deleteStatus = 'succeeded'; state.vehicles = state.vehicles.filter((vehicle) => vehicle.id !== action.payload) })

@@ -57,10 +57,12 @@ export const fetchScheduleById = createAsyncThunk('schedules/fetchOne', async (i
   }
 })
 
-export const createSchedule = createAsyncThunk('schedules/create', async (schedule, { rejectWithValue }) => {
+export const createSchedule = createAsyncThunk('schedules/create', async (schedule, { dispatch, rejectWithValue }) => {
   try {
     const response = await createScheduleRequest(schedule)
-    return normalizeSchedule(response, schedule)
+    const saved = normalizeSchedule(response, schedule)
+    const refreshed = fetchSchedules.fulfilled.match(await dispatch(fetchSchedules()))
+    return { saved, refreshed }
   } catch (error) {
     return rejectWithValue(getError(error, 'Unable to create this schedule.'))
   }
@@ -97,7 +99,7 @@ const scheduleSlice = createSlice({
       .addCase(fetchSchedules.fulfilled, (state, action) => { state.loadStatus = 'succeeded'; state.schedules = action.payload })
       .addCase(fetchSchedules.rejected, (state, action) => { state.loadStatus = 'failed'; state.loadError = action.payload || 'Unable to load schedules.' })
       .addCase(createSchedule.pending, (state) => { state.createStatus = 'loading'; state.createError = null })
-      .addCase(createSchedule.fulfilled, (state, action) => { state.createStatus = 'succeeded'; state.schedules.push(action.payload) })
+      .addCase(createSchedule.fulfilled, (state, action) => { state.createStatus = 'succeeded'; if (!action.payload.refreshed) state.schedules.push(action.payload.saved) })
       .addCase(createSchedule.rejected, (state, action) => { state.createStatus = 'failed'; state.createError = action.payload || 'Unable to create this schedule.' })
       .addCase(updateSchedule.pending, (state) => { state.updateStatus = 'loading'; state.updateError = null })
       .addCase(updateSchedule.fulfilled, (state, action) => { state.updateStatus = 'succeeded'; state.schedules = state.schedules.map((schedule) => (schedule.id === action.payload.id ? action.payload : schedule)) })

@@ -86,17 +86,17 @@ function normalizeCommon(value) {
     })
   }
   const normalizedTimeFares = Array.isArray(timeFares) ? timeFares.map((item, index) => ({
-    id: String(read(item, 'id', 'fareId', 'Id') ?? index),
+    id: String(read(item, 'id', 'fareId', 'Id') ?? index + 1),
     period: String(read(item, 'period', 'name', 'label', 'Period') ?? `Period ${index + 1}`),
     window: String(read(item, 'window', 'timeWindow', 'schedule', 'Window') ?? ''),
     applies: String(read(item, 'applies', 'days', 'applicableDays', 'Applies') ?? 'ALL DAYS'),
     rule: String(read(item, 'fareRule', 'rule', 'multiplier', 'FareRule') ?? '1.00x'),
     status: String(read(item, 'status', 'Status') ?? 'Active'),
   })) : [
-    { id: 'morning', period: 'Morning peak', window: `${String(read(peaks, 'morningStart', 'morningPeakStart') ?? '06:30')}–${String(read(peaks, 'morningEnd', 'morningPeakEnd') ?? '09:00')}`, applies: 'MON–FRI', rule: `${Number(read(peaks, 'multiplier', 'peakMultiplier') ?? 1.25).toFixed(2)}x`, status: 'Active' },
-    { id: 'off-peak', period: 'Off-peak', window: '09:00–16:30', applies: 'MON–FRI', rule: '0.90x', status: 'Active' },
-    { id: 'evening', period: 'Evening peak', window: `${String(read(peaks, 'eveningStart', 'eveningPeakStart') ?? '16:30')}–${String(read(peaks, 'eveningEnd', 'eveningPeakEnd') ?? '19:30')}`, applies: 'MON–FRI', rule: '1.20x', status: 'Active' },
-    { id: 'night', period: 'Night service', window: '19:30–05:00', applies: 'ALL DAYS', rule: '+ LKR 40', status: 'Active' },
+    { id: '1', period: 'Morning peak', window: `${String(read(peaks, 'morningStart', 'morningPeakStart') ?? '06:30')}–${String(read(peaks, 'morningEnd', 'morningPeakEnd') ?? '09:00')}`, applies: 'MON–FRI', rule: `${Number(read(peaks, 'multiplier', 'peakMultiplier') ?? 1.25).toFixed(2)}x`, status: 'Active' },
+    { id: '2', period: 'Off-peak', window: '09:00–16:30', applies: 'MON–FRI', rule: '0.90x', status: 'Active' },
+    { id: '3', period: 'Evening peak', window: `${String(read(peaks, 'eveningStart', 'eveningPeakStart') ?? '16:30')}–${String(read(peaks, 'eveningEnd', 'eveningPeakEnd') ?? '19:30')}`, applies: 'MON–FRI', rule: '1.20x', status: 'Active' },
+    { id: '4', period: 'Night service', window: '19:30–05:00', applies: 'ALL DAYS', rule: '+ LKR 40', status: 'Active' },
   ]
   return {
     source: config,
@@ -204,7 +204,10 @@ function FareManagementView() {
     setSaveMessage('')
     try {
       const result = await getFareConfig(nextRouteId)
-      if (requestId === commonRequestId.current) setCommon(normalizeCommon(result))
+      if (requestId === commonRequestId.current) {
+        const next = normalizeCommon(result)
+        setCommon((current) => current ? { ...current, flatFares: next.flatFares } : next)
+      }
     } catch (error) {
       if (requestId === commonRequestId.current) setLoadError(error.message || 'Unable to load fare configuration for this route.')
     } finally {
@@ -239,7 +242,7 @@ function FareManagementView() {
           routeId: selectedRouteId,
           distanceFare: common.distanceFare.map((row) => ({ Id: row.id, Minkm: Number(row.minimumKm), Maxkm: Number(row.maximumKm), StandardFare: Number(row.standard), OffPeakFare: Number(row.offPeak) })),
           flatFares: common.flatFares.map((fare) => ({ Id: fare.id, RouteId: selectedRouteId, PassengerType: fare.label, PassengerDescription: fare.subtitle, Local: Number(fare.localFare), Express: Number(fare.expressFare), Rule: fare.rule, Status: fare.status })),
-          timeBasedFares: common.timeFares,
+          timeBasedFares: common.timeFares.map(({ id, ...fare }) => ({ Id: Number(id), ...fare })),
           passes: common.passes.filter((pass) => !pass.isVisitorConfig).map((pass) => ({ ...(pass.id !== undefined ? { Id: pass.id } : {}), PassProduct: pass.name, Tagline: pass.tagline, Price: Number(pass.price), Validity: pass.validity, UsageCondition: pass.usage, IsOn: pass.status.toLowerCase() === 'active' })),
         })
       setSaveMessage('Fare configuration saved.')
